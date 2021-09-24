@@ -1,0 +1,262 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package mypackage;
+
+import java.awt.Button;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dialog;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Label;
+import java.awt.Panel;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+
+class Myframe1 extends Frame
+{
+    Panel mainPanel;
+    TextField txtnum1, txtnum2;
+    Label lblnum1, lblnum2, lblans;
+    Button btnadd, btnsub;    
+    
+    public Myframe1()
+    {
+        setSize(400,350);
+        setTitle("CALCULATOR");
+        setLocationRelativeTo(null);
+        setLayout(null);
+        setResizable(false);
+        
+        addComponent();
+        
+        setVisible(true);
+        this.addWindowListener(new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent e)
+            {
+                dispose();
+            }
+        });
+    }
+
+    private void addComponent()
+    {
+        Font f = new Font("verdena", Font.BOLD, 20);
+        
+        //adding mainPanel
+        mainPanel = new Panel();
+        mainPanel.setBounds(0, 0, getWidth(), getHeight());
+        mainPanel.setBackground(new Color(18, 30, 49));
+        mainPanel.setLayout(null);
+        
+        //adding TextField
+        txtnum1 = new TextField();
+        txtnum1.setBounds(50,100,135,30);
+        txtnum1.setFont(f);
+        txtnum1.setBackground(new Color(34, 76, 113));
+        txtnum1.setForeground(Color.WHITE);
+        txtnum1.requestFocus();
+        txtnum1.addKeyListener(new MyKeyListener1());
+        mainPanel.add(txtnum1);
+        
+        txtnum2 = new TextField();
+        txtnum2.setBounds(215,100,135,30);
+        txtnum2.setFont(f);
+        txtnum2.setBackground(new Color(34, 76, 113));
+        txtnum2.setForeground(Color.WHITE);
+        txtnum2.addKeyListener(new MyKeyListener1());
+        mainPanel.add(txtnum2);
+        
+        //adding Label
+        lblnum1 = new Label("First Value");
+        lblnum1.setBounds(50,70,135,30);
+        lblnum1.setFont(f);
+        lblnum1.setAlignment(Label.CENTER);
+        lblnum1.setForeground(new Color(154, 147, 189));
+        mainPanel.add(lblnum1);
+        
+        lblnum2 = new Label("Second Value");
+        lblnum2.setBounds(215,70,135,30);
+        lblnum2.setFont(f);
+        lblnum2.setAlignment(Label.CENTER);
+        lblnum2.setForeground(new Color(154, 147, 189));
+        mainPanel.add(lblnum2);
+        
+        //adding Button
+        btnadd = new Button("SUM");
+        btnadd.setBounds(50,190,135,35);
+        btnadd.setFont(f);
+        btnadd.setBackground(Color.RED);
+        btnadd.setForeground(Color.yellow);
+        btnadd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnadd.addActionListener(new MyActionListener1(this));
+        mainPanel.add(btnadd);
+        
+        btnsub = new Button("SUB");
+        btnsub.setBounds(215,190,135,35);
+        btnsub.setFont(f);
+        btnsub.setBackground(Color.RED);
+        btnsub.setForeground(Color.yellow);
+        btnsub.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnsub.addActionListener(new MyActionListener1(this));
+        mainPanel.add(btnsub);
+        
+        //adding Label lblans
+        lblans = new Label("ANSWER HERE");
+        lblans.setFont(f);
+        lblans.setBounds(20,260,360,50);
+        lblans.setBackground(new Color(154, 147, 189));
+        lblans.setForeground(Color.BLACK);
+        lblans.setAlignment(Label.CENTER);
+        mainPanel.add(lblans);
+        
+        add(mainPanel);
+    }
+}
+
+//adding KeyListener for TextField for validations
+class MyKeyListener1 extends KeyAdapter
+{
+    public void keyTyped(KeyEvent e)
+    {
+        char ch = e.getKeyChar();
+        if( !Character.isDigit(ch))
+        {
+            e.consume();
+        }
+    }
+}
+
+//adding ActionListener for Buttons, to calculate result of add,sub & display result on lblans
+class MyActionListener1 implements ActionListener
+{
+    Myframe1 frame;
+    
+    public MyActionListener1(Myframe1 ref)
+    {
+        frame = ref;
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        Button btnclicked = (Button) e.getSource();
+        String str1 = frame.txtnum1.getText();
+        String str2 = frame.txtnum2.getText();
+        
+        if(btnclicked.getActionCommand().equals("SUM"))
+        {
+            try
+            {
+                int num1 = Integer.parseInt(str1);
+                int num2 = Integer.parseInt(str2);
+                int ans = num1 + num2;
+                frame.lblans.setText("ADDITION = " + ans);
+            } 
+            catch(NumberFormatException ne)
+            {
+                frame.txtnum1.setText("");
+                frame.txtnum2.setText("");
+                frame.lblans.setText("ANSWER HERE");
+                frame.txtnum1.requestFocus();
+                Mydialog1 md = new Mydialog1(frame);
+            }
+        }
+        if(btnclicked.getActionCommand().equals("SUB"))
+        {
+            try
+            {
+                int num1 = Integer.parseInt(str1);
+                int num2 = Integer.parseInt(str2);
+                int ans = num1 - num2;
+                frame.lblans.setText("SUBSTRACTION = " + ans);
+            } 
+            catch(NumberFormatException ne)
+            {
+                frame.txtnum1.setText("");
+                frame.txtnum2.setText("");
+                frame.lblans.setText("ANSWER HERE");
+                frame.txtnum1.requestFocus();
+                Mydialog1 d = new Mydialog1(frame);
+                      
+            }
+        }
+    }
+}
+
+class Mydialog1 extends Dialog
+{   
+    Label lblmsg1, lblmsg2;
+    Button btnok;
+    
+    public Mydialog1(Myframe1 frame)
+    {
+        super(frame, false);
+        setSize(200,150);
+        setLayout(null);
+        setBackground(new Color(134, 124, 91));
+        setResizable(false);
+        setLocationRelativeTo(frame);
+        setUndecorated(true);
+        
+        initialize();
+        
+        setVisible(true);
+    }
+
+    private void initialize()
+    {
+        Font f = new Font("verdena", Font.BOLD, 12);
+        
+        //adding Label
+        lblmsg1 = new Label("Invalid Data!!");
+        lblmsg1.setBounds(10,20,180,20);
+        lblmsg1.setFont(f);
+        lblmsg1.setForeground(Color.black);
+        lblmsg1.setAlignment(Label.CENTER);
+        add(lblmsg1);
+        
+        lblmsg2 = new Label("please enter correct data");
+        lblmsg2.setBounds(10,42,180,20);
+        lblmsg2.setFont(f);
+        lblmsg2.setForeground(Color.black);
+        lblmsg2.setAlignment(Label.CENTER);
+        add(lblmsg2);
+        
+        //adding Button
+        btnok = new Button("OK");
+        btnok.setBounds(75,90,50,30);
+        btnok.setFont(new Font("verdena", Font.BOLD, 15));
+        btnok.setBackground(Color.red);
+        btnok.setForeground(Color.yellow);
+        btnok.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        add(btnok);
+        
+        //adding ActionListener for btnok
+        btnok.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                dispose();
+            }
+        });
+    }
+}
+public class Program1
+{
+    public static void main(String[] args)    
+    {
+        Myframe1 frame = new Myframe1();
+    }
+}

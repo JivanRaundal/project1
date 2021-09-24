@@ -17,7 +17,7 @@ public class FirstDesign extends javax.swing.JFrame
      */
     public FirstDesign()
     {
-
+	System.out.println("Accept mar bsdk");
         initComponents();
         CommonFunction.addLabelBackground(lblusername, "C:\\Users\\sanje\\Documents\\NetBeansProjects\\MyProject\\src\\main\\java\\design\\images\\username-icon.png");
         CommonFunction.addLabelBackground(lblpassword, "C:\\Users\\sanje\\Documents\\NetBeansProjects\\MyProject\\src\\main\\java\\design\\images\\password-icon.png");
